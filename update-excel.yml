@@ -1,0 +1,25 @@
+name: Auto Update Excel File
+
+on:
+  schedule:
+    - cron: "0 2 * * *"  # Runs every day at 2:00 AM UTC
+  workflow_dispatch:     # Allow manual run
+
+jobs:
+  download-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Download Excel File
+        run: |
+          curl -L "https://beltonene-my.sharepoint.com/:x:/p/npacheco/EYCr8wtlVs9IlHKpvC1OxS8Bah869TPzhEDHYwldWAuwoQ?e=PawPyK&download=1" -o "Price Calculator Admin.xlsx"
+
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "Price Calculator Admin.xlsx"
+          git commit -m "🔄 Update Excel file automatically" || echo "No changes to commit"
+          git push
